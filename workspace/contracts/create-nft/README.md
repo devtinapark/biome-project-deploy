@@ -1,4 +1,4 @@
-# create-biome
+# create-nft
 
 TODO: Write this readme
 
