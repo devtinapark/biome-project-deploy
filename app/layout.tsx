@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { initConfig } from "@joyid/ckb";
 
 const inter = Inter({ subsets: ["latin"] });
+
+initConfig({
+  name: "JoyID demo",
+  logo: "https://fav.farm/🆔",
+  network: "testnet",
+  joyidAppURL: "https://testnet.joyid.dev",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
