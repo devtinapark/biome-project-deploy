@@ -2,7 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
-import { NibiruQuerier, Testnet } from '@nibiruchain/nibijs';
+import { NibiruTxClient, NibiruQuerier, Chain, newSignerFromMnemonic, Testnet } from '@nibiruchain/nibijs';
+import { coins } from "@cosmjs/proto-signing"
+
+const mnemonic = "lemon physical muscle room only eye express crouch tree moral unaware pyramid boost proof mom cabin pave fade glare cinnamon detect juice cruel palace";
 
 export default function Home() {
   const [connected, setConnected] = useState(false);
@@ -43,14 +46,68 @@ export default function Home() {
       });
     };
 
-    const handleConfirmBuy = () => {
+    const handleConfirmBuy = async () => {
       if (buyBalance > balance) {
         setErrorMessage('Buy balance exceeds available balance.');
       } else {
         setErrorMessage('');
-        console.log('Success');
+        console.log('Success before try');
+        try {
+          const CHAIN = Testnet(1);
+          const querier = await NibiruQuerier.connect(CHAIN.endptTm);
+          const signer = await newSignerFromMnemonic(mnemonic);
+          const txClient = await NibiruTxClient.connectWithSigner(CHAIN.endptTm, signer);
+          const [{ address: fromAddr }] = await signer.getAccounts()
+          const formattedBuyBalance = Math.round(buyBalance * 1000000);
+          const tokens = coins(formattedBuyBalance, "unibi");
+          const toAddr = "nibi1yxm7x2snd0mmymt6qg3dcn269vu5pvz8gcff3v"; //bank_wallet
+          const txResp = await txClient.sendTokens(fromAddr, toAddr, tokens, 5000);
+          console.log('buyBalance', buyBalance, 'Transaction Response:', txResp);
+        } catch (error) {
+          console.error('Failed to transfer tokens:', error);
+        }
       }
     };
+
+    // const handleConfirmBuy2 = async () => {
+    //   try {
+    //     const CHAIN = Testnet(1);
+    //     const querier = await NibiruQuerier.connect(CHAIN.endptTm);
+    //     const signer = await newSignerFromMnemonic(mnemonic);
+    //     const txClient = await NibiruTxClient.connectWithSigner(CHAIN.endptTm, signer);
+    //     const [{ address: fromAddr }] = await signer.getAccounts()
+
+    //     const tokens = coins(1, "unibi");
+    //     const toAddr = "nibi1yxm7x2snd0mmymt6qg3dcn269vu5pvz8gcff3v"; //bank_wallet
+    //     // Prompt user to sign the transaction
+    //     const signedTx = await txClient.signTx({
+    //       fromAddress: fromAddr,
+    //       msgs: [
+    //         {
+    //           typeUrl: "/cosmos.bank.v1beta1.MsgSend",
+    //           value: {
+    //             fromAddress: fromAddr,
+    //             toAddress: toAddr,
+    //             amount: tokens,
+    //           },
+    //         },
+    //       ],
+    //       fee: {
+    //         amount: coins(5000, "unibi"), // Adjust fee as needed
+    //         gas: "auto",
+    //       },
+    //       memo: "Your memo goes here",
+    //     });
+
+    //     // Broadcast the signed transaction
+    //     const txResp = await txClient.signAndBroadcast(signedTx);
+
+    //     console.log('Transaction Response:', txResp);
+    //   } catch (error) {
+    //     console.error('Failed to transfer tokens:', error);
+    //   }
+    // };
+
 
     return (
       <div className="coin-box mx-auto p-6 rounded-lg">
@@ -295,21 +352,6 @@ export default function Home() {
       console.error('Failed to get key from Leap Wallet:', error);
     }
   };
-
-  // const fetchLeapBalance = async () => {
-  //   try {
-  //     const CHAIN = Testnet(1);
-  //     const querier = await NibiruQuerier.connect(CHAIN.endptTm);
-  //     const balances = await querier.getAllBalances(account);
-  //     const nibiBalance = balances.find(balance => balance.denom === 'unibi');
-  //     const formattedBalance = nibiBalance ? nibiBalance.amount : '0';
-  //     localStorage.setItem("walletBalance", formattedBalance);
-  //     setBalance(formattedBalance);
-  //     console.log("balances: %o", balances);
-  //   } catch (error) {
-  //     console.error('Failed to fetch balance:', error);
-  //   }
-  // };
 
   const fetchBalance = async (address) => {
     console.log('fetchBalance', 'address', address);
