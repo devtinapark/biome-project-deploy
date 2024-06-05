@@ -39,7 +39,8 @@ body {
   src: local('Kanit'), url(https://fonts.googleapis.com/css2?family=Kanit:wght@400&display=swap) format('woff2');
 }
 
-.coin-box {
+.coin-box,
+.project-box {
   width: 436px;
   height: 643px;
   max-width: 436px;
