@@ -4,6 +4,11 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { connect } from '@joyid/ckb';
 import { disconnect, getConnectedAddress } from '@joyid/evm';
+interface Address {
+  street: string;
+  city: string;
+  zipCode: string;
+}
 
 export default function Home() {
   const [address, setAddress] = React.useState<Address | null>(getConnectedAddress());
