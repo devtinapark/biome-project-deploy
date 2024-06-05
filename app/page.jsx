@@ -18,6 +18,113 @@ export default function Home() {
   const [supportBalance, setSupportBalance] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [errorMessage2, setErrorMessage2] = useState('');
+  const initialProjectState = {
+    address: '',
+    city: '',
+    title: '',
+    description: '',
+    img: ''
+  };
+  const [project, setProject] = useState(initialProjectState);
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = '//unpkg.com/globe.gl';
+    script.async = true;
+    document.body.appendChild(script);
+
+    script.onload = () => {
+      loadGlobe();
+    };
+    const markerSvg = `<svg viewBox="-4 0 36 36">
+    <path fill="currentColor" d="M14,0 C21.732,0 28,5.641 28,12.6 C28,23.963 14,36 14,36 C14,36 0,24.064 0,12.6 C0,5.641 6.268,0 14,0 Z"></path>
+    <circle fill="black" cx="14" cy="14" r="7"></circle>
+    </svg>`;
+    const loadGlobe = async () => {
+      const myGlobe = window.Globe();
+      const N = 30;
+      const gData = [...Array(N).keys()].map(() => ({
+        lat: (Math.random() - 0.5) * 180,
+        lng: (Math.random() - 0.5) * 360,
+        size: 7 + Math.random() * 30,
+        color: ['red', 'blue', 'green'][Math.floor(Math.random() * 3)] // Random color selection
+      }));
+
+      // Add predefined items
+      gData.push(
+        {
+          lat: 21.0285, // Hanoi latitude
+          lng: 105.8542, // Hanoi longitude
+          size: 30,
+          color: 'white' // White color
+        },
+        {
+          lat: 10.8231, // HCMC latitude
+          lng: 106.6297, // HCMC longitude
+          size: 40,
+          color: 'white' // White color
+        },
+        {
+          lat: 16.0544, // Danang latitude
+          lng: 108.2022, // Danang longitude
+          size: 20,
+          color: 'white' // White color
+        }
+      );
+
+      myGlobe
+        .globeImageUrl('//unpkg.com/three-globe/example/img/earth-dark.jpg')
+        .htmlElementsData(gData)
+        .htmlElement(d => {
+          const el = document.createElement('div');
+          el.innerHTML = markerSvg;
+          el.style.color = d.color;
+          el.style.width = `${d.size}px`;
+          el.style['pointer-events'] = 'auto';
+          el.style.cursor = 'pointer';
+          el.onclick = () => onElClick(d);
+          return el;
+        })
+      myGlobe.htmlTransitionDuration(1000);
+      const myDOMElement = document.getElementById('globe-container');
+      myGlobe(myDOMElement);
+    };
+  }, [activeMenu]);
+
+  const onElClick = (d) => {
+    console.info(d);
+    if (d.lat === 21.0285 && d.lng === 105.8542) {
+      fetchDonatedBalance('nibi1mxs5f2ge30jyg8furfwalpfl4frk6cx92csug7');
+      setProject({
+        address: 'nibi1mxs5f2ge30jyg8furfwalpfl4frk6cx92csug7',
+        city: 'Hanoi',
+        title: 'Hanoi Project',
+        description: 'Description for Hanoi project',
+        img: ''
+      });
+    } else if (d.lat === 10.8231 && d.lng === 106.6297) {
+      fetchDonatedBalance('nibi1vyfv6mpn0zg7q7ayc3c6eldajs4q7s20mc84n8');
+      setProject({
+        address: 'nibi1vyfv6mpn0zg7q7ayc3c6eldajs4q7s20mc84n8',
+        city: 'HCMC',
+        title: 'HCMC Project',
+        description: 'Description for HCMC project',
+        img: ''
+      });
+    } else if (d.lat === 16.0544 && d.lng === 108.2022) {
+      fetchDonatedBalance('nibi1hf2l5an0w7wgr7at3k0yskqlr6f5z0k6c629wn');
+      setProject({
+        address: 'nibi1hf2l5an0w7wgr7at3k0yskqlr6f5z0k6c629wn',
+        city: 'Da Nang',
+        title: 'Da Nang Project',
+        description: 'Description for Da Nang project',
+        img: ''
+      });
+    }
+    fetchBalance();
+    setActiveMenu('support-project');
+  };
+
 
   const CoinBox = () => {
     const handleBuyInput = (e) => {
@@ -152,21 +259,22 @@ export default function Home() {
 
   const GlobeBox = () => {
     return (
-      <div className="coin-box mx-auto p-6 rounded-lg">
-        <h1 className="text-2xl mb-4">Globe</h1>
-        <div className="flex flex-col p-2 border border-primary rounded-lg z-1">
-          Addresses:
-          <Button onClick={() => handleAddressClick('nibi1mxs5f2ge30jyg8furfwalpfl4frk6cx92csug7')}>
-            nibi1mxs5f2ge30jyg8furfwalpfl4frk6cx92csug7
-          </Button>
-          <Button onClick={() => handleAddressClick('nibi1vyfv6mpn0zg7q7ayc3c6eldajs4q7s20mc84n8')}>
-            nibi1vyfv6mpn0zg7q7ayc3c6eldajs4q7s20mc84n8
-          </Button>
-          <Button onClick={() => handleAddressClick('nibi1hf2l5an0w7wgr7at3k0yskqlr6f5z0k6c629wn')}>
-            nibi1hf2l5an0w7wgr7at3k0yskqlr6f5z0k6c629wn
-          </Button>
-        </div>
-      </div>
+      <div id="globe-container"></div>
+      // <div className="coin-box mx-auto p-6 rounded-lg">
+      //   <h1 className="text-2xl mb-4">Globe</h1>
+      //   <div className="flex flex-col p-2 border border-primary rounded-lg z-1">
+      //     Addresses:
+      //     <Button onClick={() => handleAddressClick('nibi1mxs5f2ge30jyg8furfwalpfl4frk6cx92csug7')}>
+      //       nibi1mxs5f2ge30jyg8furfwalpfl4frk6cx92csug7
+      //     </Button>
+      //     <Button onClick={() => handleAddressClick('nibi1vyfv6mpn0zg7q7ayc3c6eldajs4q7s20mc84n8')}>
+      //       nibi1vyfv6mpn0zg7q7ayc3c6eldajs4q7s20mc84n8
+      //     </Button>
+      //     <Button onClick={() => handleAddressClick('nibi1hf2l5an0w7wgr7at3k0yskqlr6f5z0k6c629wn')}>
+      //       nibi1hf2l5an0w7wgr7at3k0yskqlr6f5z0k6c629wn
+      //     </Button>
+      //   </div>
+      // </div>
     );
   };
 
@@ -212,8 +320,8 @@ export default function Home() {
           <p className="font-bold">Project Title</p>
           <div className="flex flex-col p-2 border border-primary rounded-lg z-1">
             <ul>
-              <li>Location: Vietnam</li>
-              <li>Goal:</li>
+              <li>Location: {project.city}</li>
+              <li>Description: {project.description}</li>
               <li>Donated: {donatedBalance} BIOME</li>
             </ul>
           </div>
