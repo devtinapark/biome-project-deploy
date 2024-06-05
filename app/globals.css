@@ -31,3 +31,21 @@ body {
     text-wrap: balance;
   }
 }
+
+@font-face {
+  font-family: 'Kanit';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Kanit'), url(https://fonts.googleapis.com/css2?family=Kanit:wght@400&display=swap) format('woff2');
+}
+
+.coin-box {
+  width: 436px;
+  height: 643px;
+  max-width: 436px;
+  border-radius: 25px;
+  border: 1px solid rgb(64, 61, 63);
+  margin-bottom: 15px;
+  background: linear-gradient(90deg, rgb(24, 1, 16) 0%, rgb(22, 1, 16) 50%, rgb(20, 1, 16) 100%);
+  box-shadow: rgb(255, 255, 255) 0px 2px 20px;
+}
