@@ -2,38 +2,96 @@
 
 import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
-import { useRouter } from 'next/navigation';
 import { NibiruQuerier, Testnet } from '@nibiruchain/nibijs';
 
 export default function Home() {
   const [connected, setConnected] = useState(false);
   const [account, setAccount] = useState('');
-  const [balance, setBalance] = useState(null);
-  const [donatedBalance, setDonatedBalance] = useState(null);
+  const [balance, setBalance] = useState('');
+  const [biomeBalance, setBiomeBalance] = useState('');
+  const [donatedBalance, setDonatedBalance] = useState('');
   const [activeMenu, setActiveMenu] = useState('globe');
+  const [buyBalance, setBuyBalance] = useState('');
+  const [supportBalance, setSupportBalance] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage2, setErrorMessage2] = useState('');
 
-  const router = useRouter();
+  const CoinBox = () => {
+    const handleBuyInput = (e) => {
+      setErrorMessage('');
+      const inputValue = e.target.value;
+      if (/^[1-9]\d*$/.test(inputValue)) {
+        setSupportBalance(inputValue);
+      } else if (inputValue === '') {
+        setSupportBalance('');
+      }
+    };
 
-  const CoinBox = () => (
-    <div className="coin-box mx-auto p-6 rounded-lg">
-      <h1 className="text-2xl mb-4">Buy Biome</h1>
-      <div className="mb-4">
-        <p className="font-bold">Nibiru</p>
-        <div className="flex flex-col p-2 border border-primary rounded-lg z-1">
-          <input type="text" className="bg-transparent w-full" placeholder="Enter balance" />
+    const incrementBuyBalance = () => {
+      setErrorMessage('');
+      setBuyBalance(prevBalance => {
+        const incrementedValue = parseInt(prevBalance || '0', 10) + 1;
+        return incrementedValue.toString();
+      });
+    };
+
+    const decrementBuyBalance = () => {
+      setErrorMessage('');
+      setBuyBalance(prevBalance => {
+        const decrementedValue = Math.max(parseInt(prevBalance || '0', 10) - 1, 1);
+        return decrementedValue.toString();
+      });
+    };
+
+    const handleConfirmBuy = () => {
+      if (buyBalance > balance) {
+        setErrorMessage('Buy balance exceeds available balance.');
+      } else {
+        setErrorMessage('');
+        console.log('Success');
+      }
+    };
+
+    return (
+      <div className="coin-box mx-auto p-6 rounded-lg">
+        <h1 className="text-2xl mb-4">Buy Biome</h1>
+        <div className="mb-4">
+          <p className="font-bold">My Balance</p>
+          <div className="flex flex-col p-2 border border-primary rounded-lg z-1">
+            {balance} UNIBI
+          </div>
         </div>
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">Biome</p>
-        <div className="flex flex-col p-2 border border-primary rounded-lg z-1">
-          <input type="text" className="bg-transparent w-full" placeholder="Enter balance" />
+        <div className="mb-4">
+          <p className="font-bold">Buy Biome</p>
+          <div className="flex flex-col p-2 border border-primary rounded-lg relative">
+            <input
+              type="text"
+              className="bg-transparent w-full pr-10" // Add padding to the right to accommodate buttons
+              placeholder="Enter balance"
+              value={buyBalance}
+              onInput={handleBuyInput}
+            />
+            <button
+              className="absolute right-0 top-0 bottom-0 px-2 flex items-center justify-center" // Positioning the button
+              onClick={incrementBuyBalance}
+            >
+              +
+            </button>
+            <button
+              className="absolute right-8 top-0 bottom-0 px-2 flex items-center justify-center" // Positioning the button
+              onClick={decrementBuyBalance}
+            >
+              -
+            </button>
+          </div>
         </div>
+        <div className="mt-4 flex flex-row items-center justify-around w-full bg-white bg-opacity-20 rounded-lg shadow-md backdrop-filter backdrop-blur-md border border-white border-opacity-30 p-4">
+          <button onClick={() => handleConfirmBuy()}>Confirm Buy</button>
+        </div>
+        {errorMessage && <p className="mt-2 text-red-500">{errorMessage}</p>}
       </div>
-      <div className="mt-4 flex flex-row items-center justify-around w-full bg-white bg-opacity-20 rounded-lg shadow-md backdrop-filter backdrop-blur-md border border-white border-opacity-30 p-4">
-        <button>Confirm Buy</button>
-      </div>
-    </div>
-  );
+    );
+  };
 
   const GlobeBox = () => {
     return (
@@ -56,6 +114,40 @@ export default function Home() {
   };
 
   const ProjectBox = () => {
+    const handleSupportInput = (e) => {
+      const inputValue = e.target.value;
+      if (/^[1-9]\d*$/.test(inputValue)) {
+        setSupportBalance(inputValue);
+      } else if (inputValue === '') {
+        setSupportBalance('');
+      }
+    };
+
+    const incrementSupportBalance = () => {
+      setErrorMessage2('');
+      setSupportBalance(prevBalance => {
+        const incrementedValue = parseInt(prevBalance || '0', 10) + 1;
+        return incrementedValue.toString();
+      });
+    };
+
+    const decrementSupportBalance = () => {
+      setErrorMessage2('');
+      setSupportBalance(prevBalance => {
+        const decrementedValue = Math.max(parseInt(prevBalance || '0', 10) - 1, 1);
+        return decrementedValue.toString();
+      });
+    };
+
+    const handleConfirmSend = () => {
+      if (supportBalance > biomeBalance) {
+        setErrorMessage2('Send balance exceeds available balance.');
+      } else {
+        setErrorMessage2('');
+        console.log('Success');
+      }
+    };
+
     return (
       <div className="project-box mx-auto p-6 rounded-lg">
         <h1 className="text-2xl mb-4">Support Project</h1>
@@ -65,19 +157,44 @@ export default function Home() {
             <ul>
               <li>Location: Vietnam</li>
               <li>Goal:</li>
-              <li>Donated: {donatedBalance}</li>
+              <li>Donated: {donatedBalance} BIOME</li>
             </ul>
           </div>
         </div>
         <div className="mb-4">
-          <p className="font-bold">Send Biomes to support project</p>
+          <p className="font-bold">My Balance</p>
           <div className="flex flex-col p-2 border border-primary rounded-lg z-1">
-            <input type="text" className="bg-transparent w-full" placeholder="Enter balance" />
+            {biomeBalance} BIOME
+          </div>
+        </div>
+        <div className="mb-4">
+          <p className="font-bold">Send Biome</p>
+          <div className="flex flex-col p-2 border border-primary rounded-lg relative">
+            <input
+              type="text"
+              className="bg-transparent w-full pr-10" // Add padding to the right to accommodate buttons
+              placeholder="Enter balance"
+              value={supportBalance}
+              onInput={handleSupportInput}
+            />
+            <button
+              className="absolute right-0 top-0 bottom-0 px-2 flex items-center justify-center" // Positioning the button
+              onClick={incrementSupportBalance}
+            >
+              +
+            </button>
+            <button
+              className="absolute right-8 top-0 bottom-0 px-2 flex items-center justify-center" // Positioning the button
+              onClick={decrementSupportBalance}
+            >
+              -
+            </button>
           </div>
         </div>
         <div className="mt-4 flex flex-row items-center justify-around w-full bg-white bg-opacity-20 rounded-lg shadow-md backdrop-filter backdrop-blur-md border border-white border-opacity-30 p-4">
-          <button>Confirm Send</button>
+          <button onClick={() => handleConfirmSend()}>Confirm Send</button>
         </div>
+        {errorMessage2 && <p className="mt-2 text-red-500">{errorMessage2}</p>}
       </div>
     );
   };
@@ -91,6 +208,7 @@ export default function Home() {
 
   const handleAddressClick = async (address) => {
     console.log('handle address click');
+    fetchBalance();
     fetchDonatedBalance(address);
     setActiveMenu('support-project');
   };
@@ -99,9 +217,10 @@ export default function Home() {
     const storedAccount = localStorage.getItem("selectedAccount");
     if (storedAccount) {
       setConnected(true);
+      setAccount(storedAccount);
     }
 
-    fetchLeapBalance();
+    fetchBalance();
   }, []);
 
   async function connect() {
@@ -145,14 +264,31 @@ export default function Home() {
     };
   }, []);
 
+  const handleNavigate = (activeMenu) => {
+    setBuyBalance('');
+    setDonatedBalance('');
+    setSupportBalance('');
+    setActiveMenu(activeMenu);
+  }
+
+  const handleBuyNavigate = () => {
+    console.log('handleBuyNavigate');
+    setBuyBalance('');
+    setDonatedBalance('');
+    setSupportBalance('');
+    connected && fetchBalance(account);
+    setActiveMenu('buy-biome');
+  };
+
   const getLeapKey = async () => {
-    console.log('try3');
+    console.log('getLeapKey');
     try {
       const key = await window.leap.getKey('cataclysm-1');
       const selectedAccount = (key.bech32Address);
       setConnected(true);
-      console.log(selectedAccount);
+      console.log('selectedAccount', selectedAccount);
       console.log("Connected");
+      setAccount(selectedAccount);
       localStorage.setItem("selectedAccount", selectedAccount);
       console.log("Account stored in local storage");
     } catch (error) {
@@ -160,22 +296,47 @@ export default function Home() {
     }
   };
 
-  const fetchLeapBalance = async () => {
-    try {
-      const address = 'nibi1mxs5f2ge30jyg8furfwalpfl4frk6cx92csug7';
-      const CHAIN = Testnet(1);
-      const querier = await NibiruQuerier.connect(CHAIN.endptTm);
-      const balances = await querier.getAllBalances(address);
-      const nibiBalance = balances.find(balance => balance.denom === 'unibi');
-      const formattedBalance = nibiBalance ? nibiBalance.amount : '0';
+  // const fetchLeapBalance = async () => {
+  //   try {
+  //     const CHAIN = Testnet(1);
+  //     const querier = await NibiruQuerier.connect(CHAIN.endptTm);
+  //     const balances = await querier.getAllBalances(account);
+  //     const nibiBalance = balances.find(balance => balance.denom === 'unibi');
+  //     const formattedBalance = nibiBalance ? nibiBalance.amount : '0';
+  //     localStorage.setItem("walletBalance", formattedBalance);
+  //     setBalance(formattedBalance);
+  //     console.log("balances: %o", balances);
+  //   } catch (error) {
+  //     console.error('Failed to fetch balance:', error);
+  //   }
+  // };
 
-      localStorage.setItem("walletBalance", formattedBalance);
-      setBalance(formattedBalance);
-      console.log("balances: %o", balances);
+  const fetchBalance = async (address) => {
+    console.log('fetchBalance', 'address', address);
+    try {
+      if (address && address !== '') {
+        console.log('fetchDonatedBalance after try');
+        const currentAddress = address;
+        const CHAIN = Testnet(1);
+        const querier = await NibiruQuerier.connect(CHAIN.endptTm);
+        console.log('querier', querier);
+        const balances = await querier.getAllBalances(currentAddress);
+        console.log('balances', balances);
+        const balance1 = balances.find(balance => balance.denom === 'unibi');
+        const formattedBalance1 = balance1 ? balance1.amount / 1000000 : '0';
+        const balance2 = balances.find(balance => balance.denom === 'tf/nibi17d52wdz2a09vw93jf570d6w505pv3exn4nwzxnm2k2h9my9u4xesukcarj/biome');
+        const formattedBalance2 = balance2 ? balance2.amount / 1000000 : '0';
+        setBalance(formattedBalance1);
+        setBiomeBalance(formattedBalance2);
+        console.log("formattedBalance 1 and 2", formattedBalance1, formattedBalance2);
+      } else {
+        console.log('Empty address provided. Skipping balance fetch.');
+      }
     } catch (error) {
-      console.error('Failed to fetch balance:', error);
+      console.error('Failed to fetch formattedBalance:', error);
     }
   };
+
 
   const fetchDonatedBalance = async (address) => {
     console.log('fetchDonatedBalance', 'address', address);
@@ -187,8 +348,8 @@ export default function Home() {
       console.log('querier', querier);
       const balances = await querier.getAllBalances(donatedAddress);
       console.log('balances', balances);
-      const nibiBalance = balances.find(balance => balance.denom === 'unibi');
-      const donatedBalance = nibiBalance ? nibiBalance.amount : '0';
+      const nibiBalance = balances.find(balance => balance.denom === 'tf/nibi17d52wdz2a09vw93jf570d6w505pv3exn4nwzxnm2k2h9my9u4xesukcarj/biome');
+      const donatedBalance = nibiBalance ? nibiBalance.amount/1000000 : '0';
       localStorage.setItem("donatedBalance", donatedBalance);
       setDonatedBalance(donatedBalance);
       console.log("donatedBalance: %o", balances);
@@ -217,9 +378,9 @@ export default function Home() {
       <nav className="fixed top-0 left-0 transition-top duration-200 ease-in-out h-20 w-full z-20">
         <div className="flex justify-between items-center w-full h-20 bg-transparent transform translate-y-0 px-4">
           <ul className="flex space-x-4">
-            <li><a href="#" className="hover:text-gray-300" onClick={() => setActiveMenu('buy-biome')}>Buy Biome</a></li>
-            <li><a href="#" className="hover:text-gray-300" onClick={() => setActiveMenu('globe')}>Globe</a></li>
-            <li><a href="#" className="hover:text-gray-300" onClick={() => setActiveMenu('make-project')}>Make a Project</a></li>
+            <li><a href="#" className="hover:text-gray-300" onClick={() => handleBuyNavigate()}>Buy Biome</a></li>
+            <li><a href="#" className="hover:text-gray-300" onClick={() => handleNavigate('globe')}>Globe</a></li>
+            <li><a href="#" className="hover:text-gray-300" onClick={() => handleNavigate('make-project')}>Make a Project</a></li>
           </ul>
           <div>
             <button
