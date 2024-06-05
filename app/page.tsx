@@ -1,24 +1,74 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { connect } from '@joyid/ckb';
-import { disconnect, getConnectedAddress } from '@joyid/evm';
-interface Address {
-  street: string;
-  city: string;
-  zipCode: string;
-}
+import { connect as connectJoy } from '@joyid/ckb';
+import { disconnect as disconnectJoy } from '@joyid/evm';
+import { NibiruQuerier, Testnet } from '@nibiruchain/nibijs';
 
 export default function Home() {
-  const [address, setAddress] = React.useState<Address | null>(getConnectedAddress());
-  const onConnect = async () => {
+
+  const [joyAddress, setJoyAddress] = useState<string | null>(null);
+  const [leapConnected, setLeapConnected] = useState(false);
+  const [leapAddress, setLeapAddress] = useState('');
+  const [leapBalance, setLeapBalance] = useState(null);
+
+  const onJoyConnect = async () => {
     try {
-      const res = await connect();
-      setAddress(res);
+      const res = await connectJoy();
+      setJoyAddress(JSON.stringify(res.address));
       console.log(res);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (window.leap) {
+      window.addEventListener('leap_keystorechange', getLeapKey);
+    }
+    return () => {
+      if (window.leap) {
+        window.removeEventListener('leap_keystorechange', getLeapKey);
+      }
+    };
+  }, []);
+
+  const connectLeap = async () => {
+    if (!window.leap) {
+      alert('Leap Wallet is not installed');
+      window.location.href = 'https://www.leapwallet.io/';
+    } else {
+      try {
+        await window.leap.enable('cataclysm-1');
+        getLeapKey();
+      } catch (error) {
+        console.error('Failed to connect to Leap Wallet:', error);
+      }
+    }
+  };
+
+  const getLeapKey = async () => {
+    try {
+      const key = await window.leap.getKey('cataclysm-1'); // Replace with your chain ID
+      setLeapAddress(key.bech32Address);
+      setLeapConnected(true);
+      console.log('Cosmoshub address:', key.bech32Address);
+    } catch (error) {
+      console.error('Failed to get key from Leap Wallet:', error);
+    }
+  };
+
+  const fetchLeapBalance = async () => {
+    try {
+      console.log('leapAddress', leapAddress);
+      const CHAIN = Testnet(1);
+      const querier = await NibiruQuerier.connect(CHAIN.endptTm);
+      const balances = await querier.getAllBalances(leapAddress);
+      setLeapAddress(JSON.stringify(balances));
+      console.log("balances: %o", balances);
+    } catch (error) {
+      console.error('Failed to fetch balance:', error);
     }
   };
 
@@ -27,24 +77,36 @@ export default function Home() {
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         BiomeProject
         <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          {address ? (
+          {/* {joyAddress ? (
             <>
               <button
                 className="btn btn-primary"
                 onClick={() => {
-                  disconnect();
-                  setAddress(null);
+                  disconnectJoy();
+                  setJoyAddress(null);
                 }}
               >
-                Disconnect
+                Disconnect JoyID {joyAddress}
               </button>
               <div className="divider" />
             </>
           ) : (
-            <button className="btn btn-primary" onClick={onConnect}>
+            <button className="btn btn-primary" onClick={onJoyConnect}>
               Connect JoyID
             </button>
-          )}
+          )} */}
+          <div>
+            {leapConnected ? (
+              <div>
+                <p>Leap Wallet Connected</p>
+                <p>Leap Address: {leapAddress}</p>
+                <button onClick={fetchLeapBalance}>Show Balance</button>
+                {leapBalance && <pre>{JSON.stringify(leapBalance, null, 2)}</pre>}
+              </div>
+            ) : (
+              <button onClick={connectLeap}>Connect Leap Wallet</button>
+            )}
+          </div>
         </div>
       </div>
 

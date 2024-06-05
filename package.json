@@ -11,6 +11,7 @@
   "dependencies": {
     "@joyid/ckb": "^0.0.9",
     "@joyid/evm": "^0.3.0-beta.1",
+    "@nibiruchain/nibijs": "^4.4.0",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18"
