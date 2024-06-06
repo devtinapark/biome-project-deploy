@@ -41,6 +41,7 @@ export default function Home() {
     img: ''
   };
   const [project, setProject] = useState(initialProjectState);
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -57,7 +58,7 @@ export default function Home() {
     </svg>`;
     const loadGlobe = async () => {
       const myGlobe = window.Globe();
-      const N = 30;
+      const N = 50;
       const gData = [...Array(N).keys()].map(() => ({
         lat: (Math.random() - 0.5) * 180,
         lng: (Math.random() - 0.5) * 360,
@@ -108,6 +109,7 @@ export default function Home() {
 
   const onElClick = (d) => {
     console.info(d);
+    connected && fetchBalance(account);
     if (d.lat === 21.0285 && d.lng === 105.8542) {
       fetchDonatedBalance('nibi1mxs5f2ge30jyg8furfwalpfl4frk6cx92csug7');
       setProject({
@@ -122,8 +124,8 @@ export default function Home() {
       setProject({
         address: 'nibi1vyfv6mpn0zg7q7ayc3c6eldajs4q7s20mc84n8',
         city: 'HCMC',
-        title: 'HCMC Project',
-        description: 'Description for HCMC project',
+        title: 'Green Can Gio Initiative',
+        description: 'Transform Can Gio district into a sustainable development model by 2035 through blue marine economy enhancements, eco-tourism, organic agriculture, rooftop solar installations, electric vehicles, and innovative waste management.',
         img: ''
       });
     } else if (d.lat === 16.0544 && d.lng === 108.2022) {
@@ -136,13 +138,14 @@ export default function Home() {
         img: ''
       });
     }
-    fetchBalance();
+    fetchBalance(account);
     setActiveMenu('support-project');
   };
 
 
   const CoinBox = () => {
     const handleBuyInput = (e) => {
+      setSuccessMessage('');
       setErrorMessage('');
       const inputValue = e.target.value;
       if (/^[1-9]\d*$/.test(inputValue)) {
@@ -153,6 +156,7 @@ export default function Home() {
     };
 
     const incrementBuyBalance = () => {
+      setSuccessMessage('');
       setErrorMessage('');
       setBuyBalance(prevBalance => {
         const incrementedValue = parseInt(prevBalance || '0', 10) + 1;
@@ -161,6 +165,7 @@ export default function Home() {
     };
 
     const decrementBuyBalance = () => {
+      setSuccessMessage('');
       setErrorMessage('');
       setBuyBalance(prevBalance => {
         const decrementedValue = Math.max(parseInt(prevBalance || '0', 10) - 1, 1);
@@ -196,6 +201,7 @@ export default function Home() {
             // Transfer biome tokens to main wallet address
             const txResp2 = await txClient.sendTokens(fromAddr, toAddr2, tokens2, 5000);
             console.log('buyBalance', buyBalance, 'biome Transaction Response:', txResp2);
+            setSuccessMessage('Transaction was made successfully!');
           } else {
             console.error('Failed to transfer unibi tokens:', txResp1.rawLog);
           }
@@ -204,47 +210,6 @@ export default function Home() {
         }
       }
     };
-
-
-    // const handleConfirmBuy2 = async () => {
-    //   try {
-    //     const CHAIN = Testnet(1);
-    //     const querier = await NibiruQuerier.connect(CHAIN.endptTm);
-    //     const signer = await newSignerFromMnemonic(mnemonic);
-    //     const txClient = await NibiruTxClient.connectWithSigner(CHAIN.endptTm, signer);
-    //     const [{ address: fromAddr }] = await signer.getAccounts()
-
-    //     const tokens = coins(1, "unibi");
-    //     const toAddr = "nibi1yxm7x2snd0mmymt6qg3dcn269vu5pvz8gcff3v"; //bank_wallet
-    //     // Prompt user to sign the transaction
-    //     const signedTx = await txClient.signTx({
-    //       fromAddress: fromAddr,
-    //       msgs: [
-    //         {
-    //           typeUrl: "/cosmos.bank.v1beta1.MsgSend",
-    //           value: {
-    //             fromAddress: fromAddr,
-    //             toAddress: toAddr,
-    //             amount: tokens,
-    //           },
-    //         },
-    //       ],
-    //       fee: {
-    //         amount: coins(5000, "unibi"), // Adjust fee as needed
-    //         gas: "auto",
-    //       },
-    //       memo: "Your memo goes here",
-    //     });
-
-    //     // Broadcast the signed transaction
-    //     const txResp = await txClient.signAndBroadcast(signedTx);
-
-    //     console.log('Transaction Response:', txResp);
-    //   } catch (error) {
-    //     console.error('Failed to transfer tokens:', error);
-    //   }
-    // };
-
 
     return (
       <div className="coin-box mx-auto p-6 rounded-lg">
@@ -327,12 +292,29 @@ export default function Home() {
       });
     };
 
-    const handleConfirmSend = () => {
+
+    const handleConfirmSend = async () => {
       if (supportBalance > biomeBalance) {
-        setErrorMessage2('Send balance exceeds available balance.');
+        setErrorMessage('Send balance exceeds available balance.');
       } else {
-        setErrorMessage2('');
-        console.log('Success');
+        setErrorMessage('');
+        console.log('Success before try');
+        try {
+          const CHAIN = Testnet(1);
+          const querier = await NibiruQuerier.connect(CHAIN.endptTm);
+          const signer = await newSignerFromMnemonic(mnemonic);
+          const txClient = await NibiruTxClient.connectWithSigner(CHAIN.endptTm, signer);
+          const [{ address: fromAddr }] = await signer.getAccounts();
+
+          const formattedBuyBalance = Math.round(buyBalance * 1000000);
+          const tokens = coins(formattedBuyBalance, "tf/nibi17d52wdz2a09vw93jf570d6w505pv3exn4nwzxnm2k2h9my9u4xesukcarj/biome"); // biome
+          const toAddr = projet?.address; //project_address
+
+          const txResp = await txClient.sendTokens(fromAddr, toAddr, tokens, 5000);
+          console.log('buyBalance', buyBalance, 'unibi Transaction Response:', txResp);
+        } catch (error) {
+          console.error('Failed to transfer tokens:', error);
+        }
       }
     };
 
@@ -413,11 +395,9 @@ export default function Home() {
         window.location.href = 'https://www.leapwallet.io/';
       } else {
         try {
-          console.log('try1');
           await window.leap.enable('cataclysm-1');
-          console.log('try2');
           getLeapKey();
-          console.log('try4');
+          connected && fetchBalance(account);
         } catch (error) {
           console.error('Failed to connect to Leap Wallet:', error);
         }
