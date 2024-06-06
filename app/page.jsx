@@ -1,11 +1,25 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Button from 'react-bootstrap/Button';
+import { Kanit, Pixelify_Sans } from 'next/font/google'
 import { NibiruTxClient, NibiruQuerier, Chain, newSignerFromMnemonic, Testnet } from '@nibiruchain/nibijs';
 import { coins } from "@cosmjs/proto-signing"
+import logo from "../public/biom_logo.gif";
 
 const mnemonic = "lemon physical muscle room only eye express crouch tree moral unaware pyramid boost proof mom cabin pave fade glare cinnamon detect juice cruel palace";
+const kanit = Kanit({
+  weight: '300',
+  style: 'normal',
+  subsets: ['latin'],
+})
+const teko = Pixelify_Sans({
+  weight: '400',
+  style: 'normal',
+  subsets: ['latin'],
+})
+
 
 export default function Home() {
   const [connected, setConnected] = useState(false);
@@ -350,8 +364,50 @@ export default function Home() {
   };
 
   const NFTBox = () => (
+    <div className="project-box mx-auto p-6 rounded-lg">
+      <h1 className="text-2xl mb-4">Apply to List Project</h1>
+      <div className="mb-4">
+        <p className="font-bold">Project Title</p>
+        <input
+          type="text"
+          className="w-full p-2 border border-primary rounded-lg"
+          placeholder="Enter project title"
+        />
+      </div>
+      <div className="mb-4">
+        <p className="font-bold">Project Location</p>
+        <input
+          type="text"
+          className="w-full p-2 border border-primary rounded-lg"
+          placeholder="Enter project location"
+        />
+      </div>
+      <div className="mb-4">
+        <p className="font-bold">Donation Goal</p>
+        <input
+          type="number"
+          className="w-full p-2 border border-primary rounded-lg"
+          placeholder="Enter donation goal"
+        />
+      </div>
+      <div className="mb-4">
+        <p className="font-bold">Description</p>
+        <textarea
+          className="w-full p-2 border border-primary rounded-lg"
+          rows="4"
+          placeholder="Enter project description"
+        ></textarea>
+      </div>
+      <div className="mt-4 flex flex-row items-center justify-around w-full bg-white bg-opacity-20 rounded-lg shadow-md backdrop-filter backdrop-blur-md border border-white border-opacity-30 p-4">
+        <button onClick={() => handleConfirmSend()}>Submit Application</button>
+      </div>
+    </div>
+  );
+
+  const Why = () => (
     <div className="coin-box mx-auto p-6 rounded-lg">
-      <h1 className="text-2xl mb-4">Make a Project</h1>
+      <h1 className="text-2xl mb-4">My Story</h1>
+      <h2>Why BiomeProject?</h2>
       {/* Add NFT content here */}
     </div>
   );
@@ -496,6 +552,8 @@ export default function Home() {
         return <ProjectBox />;
       case 'make-project':
         return <NFTBox />;
+      case 'why':
+        return <Why />;
       default:
         return null;
     }
@@ -503,13 +561,26 @@ export default function Home() {
 
   return (
     <div className="bg-[rgb(12,5,11)] min-h-screen text-white font-kanit">
-      <nav className="fixed top-0 left-0 transition-top duration-200 ease-in-out h-20 w-full z-20">
+      <nav className="fixed top-0 left-0 transition-top duration-200 ease-in-out h-20 w-full z-20 px-6 pt-4">
         <div className="flex justify-between items-center w-full h-20 bg-transparent transform translate-y-0 px-4">
-          <ul className="flex space-x-4">
-            <li><a href="#" className="hover:text-gray-300" onClick={() => handleBuyNavigate()}>Buy Biome</a></li>
-            <li><a href="#" className="hover:text-gray-300" onClick={() => handleNavigate('globe')}>Globe</a></li>
-            <li><a href="#" className="hover:text-gray-300" onClick={() => handleNavigate('make-project')}>Make a Project</a></li>
+          <ul className="flex space-x-6">
+            <li><a href="#" className="hover:text-gray-300" onClick={() => handleBuyNavigate()}>BUY</a></li>
+            <li><a href="#" className="hover:text-gray-300" onClick={() => handleNavigate('globe')}>FIND</a></li>
+            <li><a href="#" className="hover:text-gray-300" onClick={() => handleNavigate('make-project')}>APPLY</a></li>
+            <li><a href="#" className="hover:text-gray-300" onClick={() => handleNavigate('why')}>WHY</a></li>
           </ul>
+          <div className={`flex items-center ${teko.className}`}>
+            <div className="mt-3 text-neon">
+              B<span className="animation-delay-1">i</span>ome
+            </div>
+            <div className="flex items-center">
+              {/* Using the Image component */}
+              <Image src={logo} alt="BiomeProject" width={80} height={80} className="pt-3" />
+            </div>
+            <div className="mt-3 text-neon">
+              Pr<span className="animation-delay-2">o</span>j<span className="animation-delay-3">e</span>ct
+            </div>
+          </div>
           <div>
             <button
               className="text-white w-48 h-8 rounded-full"
@@ -519,13 +590,13 @@ export default function Home() {
                 padding: 'unset'
               }}
             >
-              {connected ? 'Connected' : 'Connect Wallet'}
+              {connected ? 'CONNECTED' : 'CONNECT WALLET'}
             </button>
           </div>
         </div>
       </nav>
 
-      <div className={activeMenu==='globe' ? '' : 'pt-40'}>
+      <div className={activeMenu === 'globe' ? `${kanit.className}` : `${kanit.className} pt-40`}>
         {renderMenuContent()}
       </div>
     </div>

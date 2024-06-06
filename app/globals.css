@@ -32,13 +32,6 @@ body {
   }
 }
 
-@font-face {
-  font-family: 'Kanit';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Kanit'), url(https://fonts.googleapis.com/css2?family=Kanit:wght@400&display=swap) format('woff2');
-}
-
 .coin-box,
 .project-box {
   width: 436px;
@@ -49,4 +42,39 @@ body {
   margin-bottom: 15px;
   background: linear-gradient(90deg, rgb(24, 1, 16) 0%, rgb(22, 1, 16) 50%, rgb(20, 1, 16) 100%);
   box-shadow: rgb(255, 255, 255) 0px 2px 20px;
+}
+
+
+.text-neon {
+  font-size: 24px;
+  color: #00ffdd;
+  text-shadow: 0 0 10px #00ffdd, 0 0 20px #00ffdd, 0 0 30px #00ffdd, 0 0 40px #00ffdd, 0 0 50px #00ffdd, 0 0 60px #00ffdd, 0 0 70px #00ffdd;
+}
+
+/* Slanted Fonts */
+.animation-delay-1 {
+  animation-delay: 0.5s;
+}
+
+.animation-delay-2 {
+  animation-delay: 1s;
+}
+
+.animation-delay-3 {
+  animation-delay: 1.5s;
+}
+
+/* Animation */
+@keyframes neon {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
