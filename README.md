@@ -1,8 +1,13 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Nibiru Biome Project
+
+## Overview
+This project is a Next.js / React app designed to interact with Nibiru CosmWasm smart contracts. The Nibiru Biome Project enables users to purchase Biome tokens, serving as carbon offset credits to support diverse eco-friendly initiatives globally.
+
+## Nibiru Chain Track
+Nibiru Chain is a pioneering Layer 1 blockchain and smart contract ecosystem, offering superior throughput and unmatched security. Since its emergence from stealth mode in late 2022, dozens of projects have been built on Nibiru, spanning DeFi, gaming, real-world assets, NFTs, developer tools, and bridges—each committed to making digital asset interactions fast, secure, and user-friendly.
 
 ## Getting Started
-
-First, run the development server:
+To run the development server:
 
 ```bash
 npm run dev
@@ -12,25 +17,18 @@ yarn dev
 pnpm dev
 # or
 bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Story: Why the Biome Project?
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+In an era of globalization, the rise in digital nomads and world travelers contributes to an increasing environmental impact through heightened carbon footprints. The Biome Project aims to counteract this effect by providing users with the opportunity to purchase Biome tokens, serving as carbon offset credits, to support eco-projects worldwide. Leveraging blockchain technology for transparency, security, and autonomy, users can acquire Biomes using Unibi coins and designate them to selected projects through our interactive globe feature within the app. Moreover, individuals have the option to submit their own eco-projects for consideration and support.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Features
 
-## Learn More
+- **Interactive Globe**: Explore and support eco-projects across the globe.
+- **Biome Tokens**: Purchase carbon offset credits using Unibi coins.
+- **Project Application**: Submit eco-projects for listing and support.
+- **Blockchain Transparency**: Ensuring secure and autonomous transactions.
 
-To learn more about Next.js, take a look at the following resources:
+## Submitted for GM Vietnam 2024 Rust Blockchain Hackathon
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This project represents a proof-of-concept submitted by Tina Park (the developer herself) for the GM Vietnam 2024 Rust Blockchain Hackathon.

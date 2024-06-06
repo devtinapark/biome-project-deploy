@@ -361,9 +361,14 @@ export default function Home() {
             </button>
           </div>
         </div>
-        <div className="mt-10 flex flex-row items-center justify-around w-full bg-white bg-opacity-20 rounded-lg shadow-md backdrop-filter backdrop-blur-md border border-white border-opacity-30 p-4">
-          <button onClick={() => handleConfirmSend()}>Confirm Send</button>
-        </div>
+          <button
+            className="mt-10 flex flex-row items-center justify-around w-full bg-white bg-opacity-20 rounded-lg shadow-md backdrop-filter backdrop-blur-md border border-white border-opacity-30 p-4"
+            style={{
+              background: 'linear-gradient(#05FFE6, #510CA7)',
+            }}
+            onClick={() => handleConfirmSend()}>
+            Confirm Send
+          </button>
         {errorMessage2 && <p className="mt-2 text-red-500">{errorMessage2}</p>}
       </div>
     );
@@ -373,7 +378,9 @@ export default function Home() {
     <div className="coin-box mx-auto p-6 rounded-lg">
       <h1 className="text-2xl mb-6">My Story</h1>
       <h2>Why BiomeProject?</h2>
-      {/* Add NFT content here */}
+      <div className="my-5">With globalization, the number of digital nomads and world travelers increases each year, impacting the environment through increased carbon footprints. The Biome Project addresses this by enabling users to purchase Biome tokens, carbon offset credits, to support eco-projects worldwide.</div>
+      <div> Leveraging blockchain for transparency, security, and autonomy, users can buy Biomes with Unibi coins and allocate them to selected projects via our interactive globe within the app. Additionally, individuals can apply to have their eco-projects listed for support.</div>
+      <p className="my-10"><a href="https://tinapark.dev/" className="bg-blue-500 text-white px-4 py-2 rounded-md">Made by Tina Park</a></p>
     </div>
   );
 
