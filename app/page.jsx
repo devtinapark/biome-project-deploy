@@ -596,7 +596,7 @@ export default function Home() {
         </div>
       </nav>
 
-      <div className={activeMenu === 'globe' ? `${kanit.className}` : `${kanit.className} pt-40`}>
+      <div className={activeMenu === 'globe' ? `${kanit.className} pt-20 md:pt-0` : `${kanit.className} pt-40`}>
         {renderMenuContent()}
       </div>
     </div>
