@@ -562,7 +562,7 @@ export default function Home() {
   return (
     <div className="bg-[rgb(12,5,11)] min-h-screen text-white font-kanit">
       <nav className="fixed top-0 left-0 transition-top duration-200 ease-in-out h-20 w-full z-20 px-6 pt-4">
-        <div className="flex justify-between items-center w-full h-20 bg-transparent transform translate-y-0 px-4">
+        <div className="flex flex-wrap justify-between items-center w-full h-20 bg-transparent transform translate-y-0 px-4">
           <ul className="flex space-x-6">
             <li><a href="#" className="hover:text-gray-300" onClick={() => handleBuyNavigate()}>BUY</a></li>
             <li><a href="#" className="hover:text-gray-300" onClick={() => handleNavigate('globe')}>FIND</a></li>
