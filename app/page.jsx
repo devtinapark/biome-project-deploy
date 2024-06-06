@@ -7,6 +7,7 @@ import { Kanit, Pixelify_Sans } from 'next/font/google'
 import { NibiruTxClient, NibiruQuerier, Chain, newSignerFromMnemonic, Testnet } from '@nibiruchain/nibijs';
 import { coins } from "@cosmjs/proto-signing"
 import logo from "../public/biom_logo.gif";
+import NFTBox from "./components/NFTBox";
 
 const mnemonic = "lemon physical muscle room only eye express crouch tree moral unaware pyramid boost proof mom cabin pave fade glare cinnamon detect juice cruel palace";
 const kanit = Kanit({
@@ -178,17 +179,32 @@ export default function Home() {
           const querier = await NibiruQuerier.connect(CHAIN.endptTm);
           const signer = await newSignerFromMnemonic(mnemonic);
           const txClient = await NibiruTxClient.connectWithSigner(CHAIN.endptTm, signer);
-          const [{ address: fromAddr }] = await signer.getAccounts()
+          const [{ address: fromAddr }] = await signer.getAccounts();
+
           const formattedBuyBalance = Math.round(buyBalance * 1000000);
-          const tokens = coins(formattedBuyBalance, "unibi");
-          const toAddr = "nibi1yxm7x2snd0mmymt6qg3dcn269vu5pvz8gcff3v"; //bank_wallet
-          const txResp = await txClient.sendTokens(fromAddr, toAddr, tokens, 5000);
-          console.log('buyBalance', buyBalance, 'Transaction Response:', txResp);
+          const tokens1 = coins(formattedBuyBalance, "unibi");
+          const toAddr1 = "nibi1yxm7x2snd0mmymt6qg3dcn269vu5pvz8gcff3v"; // bank_wallet
+
+          // Transfer unibi tokens to bank address
+          const txResp1 = await txClient.sendTokens(fromAddr, toAddr1, tokens1, 5000);
+          console.log('buyBalance', buyBalance, 'unibi Transaction Response:', txResp1);
+
+          if (txResp1.code === 0) { // Assuming '0' means success; adjust as necessary
+            const tokens2 = coins(formattedBuyBalance, "tf/nibi17d52wdz2a09vw93jf570d6w505pv3exn4nwzxnm2k2h9my9u4xesukcarj/biome"); // biome
+            const toAddr2 = "nibi1k9cfgjcc7fverv209jgekkw60hm76y6k0mu60a"; // main_wallet
+
+            // Transfer biome tokens to main wallet address
+            const txResp2 = await txClient.sendTokens(fromAddr, toAddr2, tokens2, 5000);
+            console.log('buyBalance', buyBalance, 'biome Transaction Response:', txResp2);
+          } else {
+            console.error('Failed to transfer unibi tokens:', txResp1.rawLog);
+          }
         } catch (error) {
           console.error('Failed to transfer tokens:', error);
         }
       }
     };
+
 
     // const handleConfirmBuy2 = async () => {
     //   try {
@@ -232,16 +248,19 @@ export default function Home() {
 
     return (
       <div className="coin-box mx-auto p-6 rounded-lg">
-        <h1 className="text-2xl mb-4">Buy Biome</h1>
+        <h1 className="text-2xl mb-6">Buy Biome</h1>
         <div className="mb-4">
           <p className="font-bold">My Balance</p>
-          <div className="flex flex-col p-2 border border-primary rounded-lg z-1">
+          <div className="flex flex-col p-2 my-2 border border-primary rounded-lg z-1">
             {balance} UNIBI
+          </div>
+          <div className="flex flex-col p-2 border border-primary rounded-lg z-1">
+            {biomeBalance} BIOME
           </div>
         </div>
         <div className="mb-4">
           <p className="font-bold">Buy Biome</p>
-          <div className="flex flex-col p-2 border border-primary rounded-lg relative">
+          <div className="flex flex-col p-2 my-2 border border-primary rounded-lg relative">
             <input
               type="text"
               className="bg-transparent w-full pr-10" // Add padding to the right to accommodate buttons
@@ -263,9 +282,14 @@ export default function Home() {
             </button>
           </div>
         </div>
-        <div className="mt-4 flex flex-row items-center justify-around w-full bg-white bg-opacity-20 rounded-lg shadow-md backdrop-filter backdrop-blur-md border border-white border-opacity-30 p-4">
-          <button onClick={() => handleConfirmBuy()}>Confirm Buy</button>
-        </div>
+        <button
+        className="mt-10 flex flex-row items-center justify-around w-full bg-white bg-opacity-20 rounded-lg shadow-md backdrop-filter backdrop-blur-md border border-white border-opacity-30 p-4"
+        style={{
+            background: 'linear-gradient(#05FFE6, #510CA7)',
+          }}
+          onClick={() => handleConfirmBuy()}>
+          Confirm Buy
+        </button>
         {errorMessage && <p className="mt-2 text-red-500">{errorMessage}</p>}
       </div>
     );
@@ -314,10 +338,10 @@ export default function Home() {
 
     return (
       <div className="project-box mx-auto p-6 rounded-lg">
-        <h1 className="text-2xl mb-4">Support Project</h1>
+        <h1 className="text-2xl mb-6">Support Project</h1>
         <div className="mb-4">
           <p className="font-bold">Project Title</p>
-          <div className="flex flex-col p-2 border border-primary rounded-lg z-1">
+          <div className="flex flex-col p-2 my-2 border border-primary rounded-lg z-1">
             <ul>
               <li>Location: {project.city}</li>
               <li>Description: {project.description}</li>
@@ -327,13 +351,13 @@ export default function Home() {
         </div>
         <div className="mb-4">
           <p className="font-bold">My Balance</p>
-          <div className="flex flex-col p-2 border border-primary rounded-lg z-1">
+          <div className="flex flex-col p-2 my-2 border border-primary rounded-lg z-1">
             {biomeBalance} BIOME
           </div>
         </div>
         <div className="mb-4">
           <p className="font-bold">Send Biome</p>
-          <div className="flex flex-col p-2 border border-primary rounded-lg relative">
+          <div className="flex flex-col p-2 my-2 border border-primary rounded-lg relative">
             <input
               type="text"
               className="bg-transparent w-full pr-10" // Add padding to the right to accommodate buttons
@@ -355,7 +379,7 @@ export default function Home() {
             </button>
           </div>
         </div>
-        <div className="mt-4 flex flex-row items-center justify-around w-full bg-white bg-opacity-20 rounded-lg shadow-md backdrop-filter backdrop-blur-md border border-white border-opacity-30 p-4">
+        <div className="mt-10 flex flex-row items-center justify-around w-full bg-white bg-opacity-20 rounded-lg shadow-md backdrop-filter backdrop-blur-md border border-white border-opacity-30 p-4">
           <button onClick={() => handleConfirmSend()}>Confirm Send</button>
         </div>
         {errorMessage2 && <p className="mt-2 text-red-500">{errorMessage2}</p>}
@@ -363,50 +387,9 @@ export default function Home() {
     );
   };
 
-  const NFTBox = () => (
-    <div className="project-box mx-auto p-6 rounded-lg">
-      <h1 className="text-2xl mb-4">Apply to List Project</h1>
-      <div className="mb-4">
-        <p className="font-bold">Project Title</p>
-        <input
-          type="text"
-          className="w-full p-2 border border-primary rounded-lg"
-          placeholder="Enter project title"
-        />
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">Project Location</p>
-        <input
-          type="text"
-          className="w-full p-2 border border-primary rounded-lg"
-          placeholder="Enter project location"
-        />
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">Donation Goal</p>
-        <input
-          type="number"
-          className="w-full p-2 border border-primary rounded-lg"
-          placeholder="Enter donation goal"
-        />
-      </div>
-      <div className="mb-4">
-        <p className="font-bold">Description</p>
-        <textarea
-          className="w-full p-2 border border-primary rounded-lg"
-          rows="4"
-          placeholder="Enter project description"
-        ></textarea>
-      </div>
-      <div className="mt-4 flex flex-row items-center justify-around w-full bg-white bg-opacity-20 rounded-lg shadow-md backdrop-filter backdrop-blur-md border border-white border-opacity-30 p-4">
-        <button onClick={() => handleConfirmSend()}>Submit Application</button>
-      </div>
-    </div>
-  );
-
   const Why = () => (
     <div className="coin-box mx-auto p-6 rounded-lg">
-      <h1 className="text-2xl mb-4">My Story</h1>
+      <h1 className="text-2xl mb-6">My Story</h1>
       <h2>Why BiomeProject?</h2>
       {/* Add NFT content here */}
     </div>
