@@ -191,15 +191,20 @@ export default function Home() {
           const toAddr1 = "nibi1yxm7x2snd0mmymt6qg3dcn269vu5pvz8gcff3v"; // bank_wallet
 
           // Transfer unibi tokens to bank address
-          const txResp1 = await txClient.sendTokens(fromAddr, toAddr1, tokens1, 5000);
+          const txResp1 = await txClient.sendTokens(fromAddr, toAddr1, tokens1, 500);
           console.log('buyBalance', buyBalance, 'unibi Transaction Response:', txResp1);
 
           if (txResp1.code === 0) { // Assuming '0' means success; adjust as necessary
+            const bankMnemonic = "mail swallow acoustic menu desert evil taxi sausage shadow seek door question where anchor teach army warfare funny cheap exit fluid wheat popular sugar";
+            const bankSigner = await newSignerFromMnemonic(bankMnemonic);
+            const bankTxClient = await NibiruTxClient.connectWithSigner(CHAIN.endptTm, bankSigner);
+            const [{ address: bankAddr }] = await bankSigner.getAccounts();
+
             const tokens2 = coins(formattedBuyBalance, "tf/nibi17d52wdz2a09vw93jf570d6w505pv3exn4nwzxnm2k2h9my9u4xesukcarj/biome"); // biome
             const toAddr2 = "nibi1k9cfgjcc7fverv209jgekkw60hm76y6k0mu60a"; // main_wallet
 
             // Transfer biome tokens to main wallet address
-            const txResp2 = await txClient.sendTokens(fromAddr, toAddr2, tokens2, 5000);
+            const txResp2 = await bankTxClient.sendTokens(bankAddr, toAddr2, tokens2, 500);
             console.log('buyBalance', buyBalance, 'biome Transaction Response:', txResp2);
             setSuccessMessage('Transaction was made successfully!');
           } else {
@@ -307,10 +312,10 @@ export default function Home() {
           const [{ address: fromAddr }] = await signer.getAccounts();
 
           const formattedBuyBalance = Math.round(buyBalance * 1000000);
-          const tokens = coins(formattedBuyBalance, "tf/nibi17d52wdz2a09vw93jf570d6w505pv3exn4nwzxnm2k2h9my9u4xesukcarj/biome"); // biome
-          const toAddr = projet?.address; //project_address
+          const tokens = coins(1000000, "tf/nibi17d52wdz2a09vw93jf570d6w505pv3exn4nwzxnm2k2h9my9u4xesukcarj/biome"); // biome
+          const toAddr = project.address; //project_address
 
-          const txResp = await txClient.sendTokens(fromAddr, toAddr, tokens, 5000);
+          const txResp = await txClient.sendTokens(fromAddr, toAddr, tokens, 500);
           console.log('buyBalance', buyBalance, 'unibi Transaction Response:', txResp);
         } catch (error) {
           console.error('Failed to transfer tokens:', error);
