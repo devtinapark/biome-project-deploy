@@ -260,21 +260,6 @@ export default function Home() {
   const GlobeBox = () => {
     return (
       <div id="globe-container"></div>
-      // <div className="coin-box mx-auto p-6 rounded-lg">
-      //   <h1 className="text-2xl mb-4">Globe</h1>
-      //   <div className="flex flex-col p-2 border border-primary rounded-lg z-1">
-      //     Addresses:
-      //     <Button onClick={() => handleAddressClick('nibi1mxs5f2ge30jyg8furfwalpfl4frk6cx92csug7')}>
-      //       nibi1mxs5f2ge30jyg8furfwalpfl4frk6cx92csug7
-      //     </Button>
-      //     <Button onClick={() => handleAddressClick('nibi1vyfv6mpn0zg7q7ayc3c6eldajs4q7s20mc84n8')}>
-      //       nibi1vyfv6mpn0zg7q7ayc3c6eldajs4q7s20mc84n8
-      //     </Button>
-      //     <Button onClick={() => handleAddressClick('nibi1hf2l5an0w7wgr7at3k0yskqlr6f5z0k6c629wn')}>
-      //       nibi1hf2l5an0w7wgr7at3k0yskqlr6f5z0k6c629wn
-      //     </Button>
-      //   </div>
-      // </div>
     );
   };
 
@@ -370,13 +355,6 @@ export default function Home() {
       {/* Add NFT content here */}
     </div>
   );
-
-  const handleAddressClick = async (address) => {
-    console.log('handle address click');
-    fetchBalance();
-    fetchDonatedBalance(address);
-    setActiveMenu('support-project');
-  };
 
   useEffect(() => {
     const storedAccount = localStorage.getItem("selectedAccount");
@@ -547,7 +525,7 @@ export default function Home() {
         </div>
       </nav>
 
-      <div className="pt-40">
+      <div className={activeMenu==='globe' ? '' : 'pt-40'}>
         {renderMenuContent()}
       </div>
     </div>
