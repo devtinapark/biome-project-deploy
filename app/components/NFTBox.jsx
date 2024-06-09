@@ -72,6 +72,14 @@ const NFTBox = () => {
       </div>
       <div className="mb-4">
         <p className="font-bold">Description</p>
+        <input
+          name="desc"
+          className="w-full p-2 mt-2 border border-primary rounded-lg bg-transparent"
+          rows="4"
+          placeholder="Enter project description"
+          value={projectApply.desc}
+          onChange={handleChange}
+        ></input>
         <textarea
           name="desc"
           className="w-full p-2 mt-2 border border-primary rounded-lg bg-transparent"

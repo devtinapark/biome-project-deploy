@@ -383,8 +383,8 @@ export default function Home() {
     <div className="coin-box mx-auto p-6 rounded-lg">
       <h1 className="text-2xl mb-6">My Story</h1>
       <h2>Why BiomeProject?</h2>
-      <div className="my-5">With globalization, the number of digital nomads and world travelers increases each year, impacting the environment through increased carbon footprints. The Biome Project addresses this by enabling users to purchase Biome tokens, carbon offset credits, to support eco-projects worldwide.</div>
-      <div> Leveraging blockchain for transparency, security, and autonomy, users can buy Biomes with Unibi coins and allocate them to selected projects via our interactive globe within the app. Additionally, individuals can apply to have their eco-projects listed for support.</div>
+      <div className="my-5">The Biome Project enables users to purchase Biome tokens, carbon offset credits, to support global eco-projects, addressing the environmental impact of increasing digital nomads and travelers.</div>
+      <div> Leveraging blockchain for transparency and security, users buy Biomes with Unibi coins and allocate them to projects via our interactive app globe. Individuals can also apply to list their eco-projects for support.</div>
       <p className="my-10"><a href="https://tinapark.dev/" className="bg-blue-500 text-white px-4 py-2 rounded-md">Made by Tina Park</a></p>
     </div>
   );
@@ -537,7 +537,18 @@ export default function Home() {
   return (
     <div className="bg-[rgb(12,5,11)] min-h-screen text-white font-kanit">
       <nav className="fixed top-0 left-0 transition-top duration-200 ease-in-out h-20 w-full z-20 px-6 pt-4">
-        <div className="flex flex-wrap justify-between items-center w-full h-20 bg-transparent transform translate-y-0 px-4">
+        <div className={`logo-div-bottom flex items-center ${teko.className}`}>
+          <div className="mt-3 text-neon">
+            B<span className="animation-delay-1">i</span>ome
+          </div>
+          <div className="flex items-center">
+            <Image src={logo} alt="BiomeProject" width={80} height={80} className="pt-3" />
+          </div>
+          <div className="mt-3 text-neon">
+            Pr<span className="animation-delay-2">o</span>j<span className="animation-delay-3">e</span>ct
+          </div>
+        </div>
+        <div className="menu-div flex flex-wrap justify-between items-center w-full h-20 bg-transparent transform translate-y-0 px-4">
           <ul className="flex space-x-6">
             <li><a href="#" className="hover:text-gray-300" onClick={() => handleBuyNavigate()}>BUY</a></li>
             <li><a href="#" className="hover:text-gray-300" onClick={() => handleNavigate('globe')}>FIND</a></li>
@@ -571,19 +582,8 @@ export default function Home() {
         </div>
       </nav>
 
-      <div className={activeMenu === 'globe' ? `${kanit.className} pt-20 md:pt-0` : `${kanit.className} pt-40`}>
+      <div className={activeMenu === 'globe' ? `${kanit.className} pt-20 md:pt-0 global-box` : `${kanit.className} pt-40 global-box`}>
         {renderMenuContent()}
-      </div>
-      <div className={`logo-div-bottom flex items-center ${teko.className}`}>
-        <div className="mt-3 text-neon">
-          B<span className="animation-delay-1">i</span>ome
-        </div>
-        <div className="flex items-center">
-          <Image src={logo} alt="BiomeProject" width={80} height={80} className="pt-3" />
-        </div>
-        <div className="mt-3 text-neon">
-          Pr<span className="animation-delay-2">o</span>j<span className="animation-delay-3">e</span>ct
-        </div>
       </div>
     </div>
   );
