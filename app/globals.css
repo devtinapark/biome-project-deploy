@@ -78,3 +78,36 @@ body {
     opacity: 0;
   }
 }
+
+.logo-div-bottom {
+  position: fixed;
+  left: 50%;
+  bottom:10px;
+}
+
+/* Responsive CSS for mobile view */
+@media screen and (max-width: 768px) {
+
+  .coin-box,
+  .project-box,
+  .nft-box {
+    width: 80%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .coin-box,
+  .project-box,
+  .nft-box,
+  .text-neon {
+    font-size: 16px;
+  }
+
+  .logo-div {
+    display: none;
+  }
+
+  .connect-div {
+    margin-top: 10px;
+  }
+}

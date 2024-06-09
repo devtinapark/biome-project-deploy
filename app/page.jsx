@@ -544,7 +544,7 @@ export default function Home() {
             <li><a href="#" className="hover:text-gray-300" onClick={() => handleNavigate('make-project')}>APPLY</a></li>
             <li><a href="#" className="hover:text-gray-300" onClick={() => handleNavigate('why')}>WHY</a></li>
           </ul>
-          <div className={`flex items-center ${teko.className}`}>
+          <div className={`logo-div flex items-center ${teko.className}`}>
             <div className="mt-3 text-neon">
               B<span className="animation-delay-1">i</span>ome
             </div>
@@ -556,7 +556,7 @@ export default function Home() {
               Pr<span className="animation-delay-2">o</span>j<span className="animation-delay-3">e</span>ct
             </div>
           </div>
-          <div>
+          <div className="connect-div">
             <button
               className="text-white w-48 h-8 rounded-full"
               onClick={connect}
@@ -573,6 +573,17 @@ export default function Home() {
 
       <div className={activeMenu === 'globe' ? `${kanit.className} pt-20 md:pt-0` : `${kanit.className} pt-40`}>
         {renderMenuContent()}
+      </div>
+      <div className={`logo-div-bottom flex items-center ${teko.className}`}>
+        <div className="mt-3 text-neon">
+          B<span className="animation-delay-1">i</span>ome
+        </div>
+        <div className="flex items-center">
+          <Image src={logo} alt="BiomeProject" width={80} height={80} className="pt-3" />
+        </div>
+        <div className="mt-3 text-neon">
+          Pr<span className="animation-delay-2">o</span>j<span className="animation-delay-3">e</span>ct
+        </div>
       </div>
     </div>
   );
