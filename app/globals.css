@@ -127,7 +127,10 @@ body {
   }
 
   .global-box {
-    height: 100vh;
+    padding-top: 150px;
+  }
+
+  .global-box-globe {
     padding-top: 5px;
   }
 
